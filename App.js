@@ -1,7 +1,6 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import { RegistrationScreen } from "./screens/RegistrationScreen";
-import { LoginScreen } from "./screens/LoginScreen";
+import { RegistrationScreen } from "./screens/RegistrationScreen/RegistrationScreen";
+import { LoginScreen } from "./screens/LoginScreen/LoginScreen";
 import { useFonts } from "expo-font";
 
 export default function App() {
