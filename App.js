@@ -1,6 +1,6 @@
 import React from "react";
-import { RegistrationScreen } from "./screens/RegistrationScreen/RegistrationScreen";
-import { LoginScreen } from "./screens/LoginScreen/LoginScreen";
+import { RegistrationScreen } from "./screens/AuthScreens/RegistrationScreen/RegistrationScreen";
+import { LoginScreen } from "./screens/AuthScreens/LoginScreen/LoginScreen";
 import { useFonts } from "expo-font";
 
 export default function App() {
