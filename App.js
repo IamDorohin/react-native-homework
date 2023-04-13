@@ -1,9 +1,13 @@
 import React from "react";
-import { RegistrationScreen } from "./screens/AuthScreens/RegistrationScreen/RegistrationScreen";
-import { LoginScreen } from "./screens/AuthScreens/LoginScreen/LoginScreen";
+import { useState } from "react";
 import { useFonts } from "expo-font";
+import { NavigationContainer } from "@react-navigation/native";
+import { useRoute } from "./helpers/routing";
 
 export default function App() {
+  const [isAuth, setIsAuth] = useState(true);
+  const routing = useRoute(isAuth);
+
   const [fontsLoaded] = useFonts({
     "roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
     "roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
@@ -13,6 +17,5 @@ export default function App() {
     return null;
   }
 
-  return <LoginScreen />;
-  // return <RegistrationScreen />;
+  return <NavigationContainer>{routing}</NavigationContainer>;
 }

@@ -106,6 +106,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
   },
+  link: {
+    marginLeft: 6,
+    color: "#0e1be6",
+    textDecorationLine: "underline",
+  },
 });
 
 export default styles;

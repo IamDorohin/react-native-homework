@@ -23,7 +23,8 @@ const initialState = {
   avatar: null,
 };
 
-export const RegistrationScreen = () => {
+export const RegistrationScreen = ({ navigation }) => {
+  console.log(navigation);
   const [isShowPassword, setIsShowPassword] = useState(true);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [activeInput, setActiveInput] = useState("");
@@ -163,11 +164,15 @@ export const RegistrationScreen = () => {
             </TouchableOpacity>
             <View style={styles.signInLink}>
               <Text>Already have an account?</Text>
-              <Text> Sign in</Text>
+              <Text
+                onPress={() => navigation.navigate("Login")}
+                style={styles.link}
+              >
+                Sign in
+              </Text>
             </View>
           </View>
         </KeyboardAvoidingView>
-        {/* </ImageBackground> */}
       </View>
     </TouchableWithoutFeedback>
   );
