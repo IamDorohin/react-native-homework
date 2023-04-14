@@ -4,6 +4,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   View,
+  Image,
   Text,
   TextInput,
 } from "react-native";
@@ -13,6 +14,7 @@ import * as ImagePicker from "expo-image-picker";
 
 import { FontAwesome } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 const initialState = {
   photo: null,
@@ -20,7 +22,7 @@ const initialState = {
   location: "",
 };
 
-export const CreatePostScreen = () => {
+export const CreatePostScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [activeInput, setActiveInput] = useState("");
   const [inputValue, setInputValue] = useState(initialState);
@@ -41,6 +43,10 @@ export const CreatePostScreen = () => {
     }
   };
 
+  const inputValueHandler = (input, value) => {
+    setInputValue((prevState) => ({ ...prevState, [input]: value }));
+  };
+
   const showKeyboardHandler = () => {
     setIsShowKeyboard(false);
     setActiveInput("");
@@ -54,32 +60,50 @@ export const CreatePostScreen = () => {
 
   const submitHandler = () => {
     console.log(inputValue);
+    navigation.navigate("Posts");
     setInputValue(initialState);
   };
 
+  console.log(inputValue.photo);
+
   return (
-    <TouchableWithoutFeedback>
-      <View style={{ flex: 1, backgroundColor: "#fff" }}>
+    <TouchableWithoutFeedback onPress={showKeyboardHandler}>
+      <View
+        style={{
+          flex: 1,
+          paddingTop: 32,
+          backgroundColor: "#fff",
+        }}
+      >
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : null}
         >
           <View
             style={{ ...styles.form, marginBottom: isShowKeyboard ? -180 : 0 }}
           >
-            <View style={styles.photoContainer}>
+            <View style={styles.photoContainer} onPress={pickImage}>
               <TouchableOpacity
                 activeOpacity={0.9}
-                // style={}
+                style={styles.photoPicker}
                 onPress={pickImage}
               >
                 {inputValue.photo && (
                   <Image
-                    // style={}
+                    style={styles.photo}
                     source={{ uri: inputValue.photo }}
                   />
                 )}
               </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.5} style={styles.photoPicker}>
+              <TouchableOpacity
+                onPress={pickImage}
+                activeOpacity={0.5}
+                style={{
+                  ...styles.photoPickerIcon,
+                  backgroundColor: inputValue.photo
+                    ? "rgba(255, 255, 255, 0.3)"
+                    : "#fff",
+                }}
+              >
                 <FontAwesome
                   name="camera"
                   size={24}
@@ -87,15 +111,17 @@ export const CreatePostScreen = () => {
                 />
               </TouchableOpacity>
             </View>
-            <Text style={styles.photoContainerDescription}>Download photo</Text>
+            <Text style={styles.photoContainerDescription}>
+              {!inputValue.photo ? "Upload photo" : "Change photo "}
+            </Text>
             <TextInput
-              onFocus={() => activeInputHandler("login")}
-              onChangeText={(value) => inputValueHandler("login", value)}
+              onFocus={() => activeInputHandler("title")}
+              onChangeText={(value) => inputValueHandler("title", value)}
               onEndEditing={() => showKeyboardHandler()}
-              value={inputValue.login}
+              value={inputValue.title}
               style={{
                 ...styles.input,
-                borderColor: activeInput === "login" ? "#FF6C00" : "#E8E8E8",
+                borderColor: activeInput === "title" ? "#FF6C00" : "#E8E8E8",
               }}
               placeholder={"Title..."}
               placeholderTextColor={"#BDBDBD"}
@@ -103,14 +129,15 @@ export const CreatePostScreen = () => {
             />
             <View>
               <TextInput
-                onFocus={() => activeInputHandler("email")}
-                onChangeText={(value) => inputValueHandler("email", value)}
+                onFocus={() => activeInputHandler("location")}
+                onChangeText={(value) => inputValueHandler("location", value)}
                 onEndEditing={() => showKeyboardHandler()}
-                value={inputValue.email}
+                value={inputValue.location}
                 style={{
                   ...styles.input,
                   paddingLeft: 24,
-                  borderColor: activeInput === "email" ? "#FF6C00" : "#E8E8E8",
+                  borderColor:
+                    activeInput === "location" ? "#FF6C00" : "#E8E8E8",
                 }}
                 placeholder={"Location..."}
                 placeholderTextColor={"#BDBDBD"}
@@ -131,6 +158,14 @@ export const CreatePostScreen = () => {
               <Text style={styles.submitBtnTitle}>Create</Text>
             </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            style={styles.deleteBtn}
+            onPress={() => {
+              setInputValue(initialState);
+            }}
+          >
+            <Feather name="trash-2" size={24} color="#BDBDBD" />
+          </TouchableOpacity>
         </KeyboardAvoidingView>
       </View>
     </TouchableWithoutFeedback>

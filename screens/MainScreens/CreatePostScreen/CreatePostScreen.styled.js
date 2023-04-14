@@ -3,11 +3,9 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   form: {
     marginHorizontal: 16,
-    paddingTop: 32,
+    height: "100%",
   },
   photoContainer: {
-    alignItems: "center",
-    justifyContent: "center",
     height: 240,
     borderRadius: 8,
     backgroundColor: "#E8E8E8",
@@ -15,10 +13,24 @@ const styles = StyleSheet.create({
   photoPicker: {
     alignItems: "center",
     justifyContent: "center",
+    height: 240,
+    width: "100%",
+  },
+  photo: {
+    height: 240,
+    width: "100%",
+    borderRadius: 8,
+  },
+  photoPickerIcon: {
+    position: "absolute",
+    alignSelf: "center",
+    top: 90,
+    alignItems: "center",
+    justifyContent: "center",
     width: 60,
     height: 60,
     borderRadius: 50,
-    backgroundColor: "#fff",
+    // backgroundColor: "teal",
   },
   photoContainerDescription: {
     marginTop: 8,
@@ -54,6 +66,17 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     fontSize: 16,
     lineHeight: 19,
+  },
+  deleteBtn: {
+    position: "absolute",
+    alignSelf: "center",
+    bottom: 34,
+    alignItems: "center",
+    justifyContent: "center",
+    width: 70,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#F6F6F6",
   },
 });
 
