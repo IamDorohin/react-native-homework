@@ -47,6 +47,7 @@ export const LoginScreen = ({ navigation }) => {
   const submitHandler = () => {
     console.log(inputValue);
     setInputValue(initialState);
+    navigation.navigate("Home");
   };
 
   return (

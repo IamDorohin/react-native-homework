@@ -5,9 +5,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 import { View } from "react-native";
 
-import { PostsScreen } from "../PostsScreen/PostsScreen";
-import { CreatePostScreen } from "../CreatePostScreen/CreatePostScreen";
-import { ProfileScreen } from "../ProfileScreen/ProfileScreen";
+import { PostsScreen } from "../MainScreens/PostsScreen/PostsScreen";
+import { CreatePostScreen } from "../MainScreens/CreatePostScreen/CreatePostScreen";
+import { ProfileScreen } from "../MainScreens/ProfileScreen/ProfileScreen";
 
 const MainTab = createBottomTabNavigator();
 
@@ -22,7 +22,17 @@ export const HomeScreen = () => {
       <MainTab.Screen
         name="Posts"
         component={PostsScreen}
-        options={{
+        options={() => ({
+          headerRight: ({}) => (
+            <View>
+              <MaterialIcons
+                name="logout"
+                size={24}
+                color="#BDBDBD"
+                style={{ marginRight: 20 }}
+              />
+            </View>
+          ),
           tabBarIcon: ({ focused, color, size }) => (
             <Feather
               name="grid"
@@ -30,7 +40,7 @@ export const HomeScreen = () => {
               color={focused ? "#FF6C00" : "#212121CC"}
             />
           ),
-        }}
+        })}
       />
       <MainTab.Screen
         name="Create Post"
