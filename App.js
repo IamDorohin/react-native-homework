@@ -5,7 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useRoute } from "./helpers/routing";
 
 export default function App() {
-  const [isAuth, setIsAuth] = useState(false);
+  const [isAuth, setIsAuth] = useState(true);
   const routing = useRoute(isAuth);
 
   const [fontsLoaded] = useFonts({

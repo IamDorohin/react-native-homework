@@ -5,23 +5,24 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     height: "100%",
   },
-  photoContainer: {
+  cameraContainer: {
     height: 240,
     borderRadius: 8,
     backgroundColor: "#E8E8E8",
   },
-  photoPicker: {
+  camera: {
     alignItems: "center",
     justifyContent: "center",
     height: 240,
     width: "100%",
+    borderRadius: 8,
   },
   photo: {
     height: 240,
     width: "100%",
     borderRadius: 8,
   },
-  photoPickerIcon: {
+  cameraIcon: {
     position: "absolute",
     alignSelf: "center",
     top: 90,
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     // backgroundColor: "teal",
   },
-  photoContainerDescription: {
+  cameraContainerDescription: {
     marginTop: 8,
     color: "#BDBDBD",
 

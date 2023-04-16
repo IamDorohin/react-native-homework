@@ -10,7 +10,8 @@ import {
 } from "react-native";
 import styles from "./CreatePostScreen.styled";
 import { useState } from "react";
-import * as ImagePicker from "expo-image-picker";
+import { nanoid } from "nanoid";
+import { Camera } from "expo-camera";
 
 import { FontAwesome } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
@@ -20,31 +21,28 @@ const initialState = {
   photo: null,
   title: "",
   location: "",
+  id: "",
 };
 
 export const CreatePostScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [activeInput, setActiveInput] = useState("");
   const [inputValue, setInputValue] = useState(initialState);
+  const [camera, setCamera] = useState(null);
+  const [photoResult, setPhotoResult] = useState(null);
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  const takePhoto = async () => {
+    if (!camera) return;
+    const { uri } = await camera.takePictureAsync();
+    console.log("takenPhoto", uri);
 
-    if (!result.canceled) {
-      setInputValue((prevState) => ({
-        ...prevState,
-        photo: result.assets[0].uri,
-      }));
-    }
+    setPhotoResult(uri);
+    setInputValue((prevState) => ({ ...prevState, photo: uri }));
   };
 
   const inputValueHandler = (input, value) => {
-    setInputValue((prevState) => ({ ...prevState, [input]: value }));
+    id = nanoid();
+    setInputValue((prevState) => ({ ...prevState, [input]: value, id }));
   };
 
   const showKeyboardHandler = () => {
@@ -60,11 +58,12 @@ export const CreatePostScreen = ({ navigation }) => {
 
   const submitHandler = () => {
     console.log(inputValue);
-    navigation.navigate("Posts");
+    navigation.navigate("Posts", { inputValue });
     setInputValue(initialState);
   };
 
-  console.log(inputValue.photo);
+  console.log("photoResult", photoResult);
+  console.log("initialState", initialState);
 
   return (
     <TouchableWithoutFeedback onPress={showKeyboardHandler}>
@@ -81,11 +80,13 @@ export const CreatePostScreen = ({ navigation }) => {
           <View
             style={{ ...styles.form, marginBottom: isShowKeyboard ? -180 : 0 }}
           >
-            <View style={styles.photoContainer} onPress={pickImage}>
-              <TouchableOpacity
-                activeOpacity={0.9}
-                style={styles.photoPicker}
-                onPress={pickImage}
+            <View style={styles.cameraContainer}>
+              <Camera
+                style={styles.camera}
+                ref={setCamera}
+                onMountError={(error) => {
+                  console.log("cammera error", error);
+                }}
               >
                 {inputValue.photo && (
                   <Image
@@ -93,26 +94,26 @@ export const CreatePostScreen = ({ navigation }) => {
                     source={{ uri: inputValue.photo }}
                   />
                 )}
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={pickImage}
-                activeOpacity={0.5}
-                style={{
-                  ...styles.photoPickerIcon,
-                  backgroundColor: inputValue.photo
-                    ? "rgba(255, 255, 255, 0.3)"
-                    : "#fff",
-                }}
-              >
-                <FontAwesome
-                  name="camera"
-                  size={24}
-                  color={inputValue.photo ? "#fff" : "#BDBDBD"}
-                />
-              </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={takePhoto}
+                  activeOpacity={0.5}
+                  style={{
+                    ...styles.cameraIcon,
+                    backgroundColor: inputValue.photo
+                      ? "rgba(255, 255, 255, 0.3)"
+                      : "#fff",
+                  }}
+                >
+                  <FontAwesome
+                    name="camera"
+                    size={24}
+                    color={inputValue.photo ? "#fff" : "#BDBDBD"}
+                  />
+                </TouchableOpacity>
+              </Camera>
             </View>
-            <Text style={styles.photoContainerDescription}>
-              {!inputValue.photo ? "Upload photo" : "Change photo "}
+            <Text style={styles.cameraContainerDescription}>
+              {!inputValue.photo ? "Upload photo" : "Change photo"}
             </Text>
             <TextInput
               onFocus={() => activeInputHandler("title")}
