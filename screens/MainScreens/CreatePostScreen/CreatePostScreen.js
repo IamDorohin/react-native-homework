@@ -41,8 +41,12 @@ export const CreatePostScreen = ({ navigation }) => {
   };
 
   const inputValueHandler = (input, value) => {
-    id = nanoid();
-    setInputValue((prevState) => ({ ...prevState, [input]: value, id }));
+    // const id = nanoid();
+    setInputValue((prevState) => ({
+      ...prevState,
+      [input]: value,
+      id: nanoid(),
+    }));
   };
 
   const showKeyboardHandler = () => {
@@ -57,13 +61,10 @@ export const CreatePostScreen = ({ navigation }) => {
   };
 
   const submitHandler = () => {
-    console.log(inputValue);
-    navigation.navigate("Posts", { inputValue });
+    console.log("created", inputValue);
+    navigation.navigate("Posts", inputValue);
     setInputValue(initialState);
   };
-
-  console.log("photoResult", photoResult);
-  console.log("initialState", initialState);
 
   return (
     <TouchableWithoutFeedback onPress={showKeyboardHandler}>
