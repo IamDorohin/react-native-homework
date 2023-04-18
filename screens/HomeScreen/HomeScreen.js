@@ -20,19 +20,10 @@ export const HomeScreen = () => {
       }}
     >
       <MainTab.Screen
-        name="Posts"
+        name="PostsScreen"
         component={PostsScreen}
         options={() => ({
-          headerRight: ({}) => (
-            <View>
-              <MaterialIcons
-                name="logout"
-                size={24}
-                color="#BDBDBD"
-                style={{ marginRight: 20 }}
-              />
-            </View>
-          ),
+          headerShown: false,
           tabBarIcon: ({ focused, color, size }) => (
             <Feather
               name="grid"
@@ -49,7 +40,7 @@ export const HomeScreen = () => {
           headerLeft: ({}) => (
             <View>
               <MaterialIcons
-                onPress={() => navigation.goBack("Posts")}
+                onPress={() => navigation.goBack("CreatePostScreen")}
                 name="keyboard-backspace"
                 size={24}
                 color="#000"
@@ -88,6 +79,24 @@ export const HomeScreen = () => {
           ),
         }}
       />
+      {/* <MainTab.Screen
+        options={({ navigation }) => ({
+          tabBarItemStyle: { display: "none" },
+          headerLeft: ({}) => (
+            <View>
+              <MaterialIcons
+                onPress={() => navigation.goBack("Posts")}
+                name="keyboard-backspace"
+                size={24}
+                color="#000"
+                style={{ marginLeft: 20 }}
+              />
+            </View>
+          ),
+        })}
+        name="MapScreen"
+        component={MapScreen}
+      /> */}
     </MainTab.Navigator>
   );
 };

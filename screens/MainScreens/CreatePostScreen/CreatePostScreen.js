@@ -1,3 +1,12 @@
+import { FontAwesome } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+
+import { useState, useEffect } from "react";
+import { nanoid } from "nanoid";
+import { Camera } from "expo-camera";
+import * as Location from "expo-location";
+
 import {
   TouchableWithoutFeedback,
   TouchableOpacity,
@@ -7,21 +16,16 @@ import {
   Image,
   Text,
   TextInput,
+  å,
 } from "react-native";
 import styles from "./CreatePostScreen.styled";
-import { useState } from "react";
-import { nanoid } from "nanoid";
-import { Camera } from "expo-camera";
-
-import { FontAwesome } from "@expo/vector-icons";
-import { EvilIcons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
 
 const initialState = {
   photo: null,
   title: "",
   location: "",
   id: "",
+  coords: {},
 };
 
 export const CreatePostScreen = ({ navigation }) => {
@@ -32,16 +36,19 @@ export const CreatePostScreen = ({ navigation }) => {
   const [photoResult, setPhotoResult] = useState(null);
 
   const takePhoto = async () => {
-    if (!camera) return;
     const { uri } = await camera.takePictureAsync();
-    console.log("takenPhoto", uri);
-
     setPhotoResult(uri);
-    setInputValue((prevState) => ({ ...prevState, photo: uri }));
+
+    const location = await Location.getCurrentPositionAsync({});
+
+    setInputValue((prevState) => ({
+      ...prevState,
+      photo: uri,
+      coords: location.coords,
+    }));
   };
 
   const inputValueHandler = (input, value) => {
-    // const id = nanoid();
     setInputValue((prevState) => ({
       ...prevState,
       [input]: value,
@@ -60,11 +67,22 @@ export const CreatePostScreen = ({ navigation }) => {
     setActiveInput(inputName);
   };
 
-  const submitHandler = () => {
+  const submitHandler = async () => {
     console.log("created", inputValue);
     navigation.navigate("Posts", inputValue);
-    setInputValue(initialState);
+    await setInputValue(initialState);
+    setPhotoResult(null);
   };
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+    })();
+  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={showKeyboardHandler}>
@@ -89,18 +107,15 @@ export const CreatePostScreen = ({ navigation }) => {
                   console.log("cammera error", error);
                 }}
               >
-                {inputValue.photo && (
-                  <Image
-                    style={styles.photo}
-                    source={{ uri: inputValue.photo }}
-                  />
+                {photoResult && (
+                  <Image style={styles.photo} source={{ uri: photoResult }} />
                 )}
                 <TouchableOpacity
                   onPress={takePhoto}
                   activeOpacity={0.5}
                   style={{
                     ...styles.cameraIcon,
-                    backgroundColor: inputValue.photo
+                    backgroundColor: photoResult
                       ? "rgba(255, 255, 255, 0.3)"
                       : "#fff",
                   }}
@@ -108,13 +123,13 @@ export const CreatePostScreen = ({ navigation }) => {
                   <FontAwesome
                     name="camera"
                     size={24}
-                    color={inputValue.photo ? "#fff" : "#BDBDBD"}
+                    color={photoResult ? "#fff" : "#BDBDBD"}
                   />
                 </TouchableOpacity>
               </Camera>
             </View>
             <Text style={styles.cameraContainerDescription}>
-              {!inputValue.photo ? "Upload photo" : "Change photo"}
+              {!photoResult ? "Upload photo" : "Change photo"}
             </Text>
             <TextInput
               onFocus={() => activeInputHandler("title")}
@@ -164,6 +179,7 @@ export const CreatePostScreen = ({ navigation }) => {
             style={styles.deleteBtn}
             onPress={() => {
               setInputValue(initialState);
+              setPhotoResult(null);
             }}
           >
             <Feather name="trash-2" size={24} color="#BDBDBD" />
