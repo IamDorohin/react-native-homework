@@ -5,6 +5,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 import { View } from "react-native";
 
+import { CommentsScreen } from "../NestedScreens/CommentsScreen/CommentsScreen";
 import { PostsScreen } from "../MainScreens/PostsScreen/PostsScreen";
 import { CreatePostScreen } from "../MainScreens/CreatePostScreen/CreatePostScreen";
 import { ProfileScreen } from "../MainScreens/ProfileScreen/ProfileScreen";

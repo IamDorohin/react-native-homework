@@ -10,6 +10,31 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: "#E8E8E8",
   },
+  loaderContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: 240,
+    borderRadius: 8,
+    backgroundColor: "transparent",
+  },
+  loaderBackground: { height: 240, width: "100%", borderRadius: 8 },
+  loader: {
+    position: "absolute",
+    alignSelf: "center",
+    justifyContent: "center",
+  },
+  loaderTitle: {
+    position: "absolute",
+    alignSelf: "center",
+    textAlign: "center",
+    top: 150,
+  },
+  loaderDescr: {
+    position: "absolute",
+    alignSelf: "center",
+    textAlign: "center",
+    top: 170,
+  },
   camera: {
     alignItems: "center",
     justifyContent: "center",

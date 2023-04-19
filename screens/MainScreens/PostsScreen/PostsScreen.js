@@ -7,17 +7,17 @@ import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
-const nestedScreen = createStackNavigator();
+const NestedScreen = createStackNavigator();
 
 export const PostsScreen = () => {
   return (
-    <nestedScreen.Navigator
+    <NestedScreen.Navigator
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: { height: 90 },
       }}
     >
-      <nestedScreen.Screen
+      <NestedScreen.Screen
         name="Posts"
         component={DefaultScreen}
         options={() => ({
@@ -39,18 +39,15 @@ export const PostsScreen = () => {
             />
           ),
         })}
-      ></nestedScreen.Screen>
-      <nestedScreen.Screen
+      />
+      <NestedScreen.Screen
         name="Comments"
         component={CommentsScreen}
         options={() => ({
           tabBarStyle: { display: "none" },
         })}
-      ></nestedScreen.Screen>
-      <nestedScreen.Screen
-        name="Map"
-        component={MapScreen}
-      ></nestedScreen.Screen>
-    </nestedScreen.Navigator>
+      />
+      <NestedScreen.Screen name="Map" component={MapScreen} />
+    </NestedScreen.Navigator>
   );
 };

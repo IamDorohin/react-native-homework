@@ -42,7 +42,9 @@ export const DefaultScreen = ({ navigation, route }) => {
                   <TouchableOpacity
                     style={styles.descriptionItem}
                     onPress={() => {
-                      navigation.navigate("Comments", { data: route.params });
+                      navigation.navigate("Comments", {
+                        data: route.params,
+                      });
                     }}
                   >
                     <EvilIcons name="comment" size={24} color="#BDBDBD" />
@@ -65,14 +67,14 @@ export const DefaultScreen = ({ navigation, route }) => {
           />
         </>
       )}
-      <View>
+      {/* <View>
         <Feather
           onPress={() => setPostsArray([])}
           name="trash-2"
           size={24}
           color="black"
         />
-      </View>
+      </View> */}
     </View>
   );
 };

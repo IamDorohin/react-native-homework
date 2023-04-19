@@ -7,12 +7,15 @@ import { nanoid } from "nanoid";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 
+const loaderGradient = require("../../../assets/loader-gradient.jpeg");
+
 import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   KeyboardAvoidingView,
   Keyboard,
   View,
+  ActivityIndicator,
   Image,
   Text,
   TextInput,
@@ -32,6 +35,7 @@ export const CreatePostScreen = ({ navigation }) => {
   const [activeInput, setActiveInput] = useState("");
   const [inputValue, setInputValue] = useState(initialState);
   const [camera, setCamera] = useState(null);
+  const [isLoadingPhoto, setIsLoadingPhoto] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -46,7 +50,9 @@ export const CreatePostScreen = ({ navigation }) => {
   const takePhoto = async () => {
     const { uri } = await camera.takePictureAsync();
 
+    setIsLoadingPhoto(true);
     let location = await Location.getCurrentPositionAsync({});
+    setIsLoadingPhoto(false);
 
     setInputValue((prevState) => ({
       ...prevState,
@@ -96,36 +102,54 @@ export const CreatePostScreen = ({ navigation }) => {
             style={{ ...styles.form, marginBottom: isShowKeyboard ? -180 : 0 }}
           >
             <View style={styles.cameraContainer}>
-              <Camera
-                style={styles.camera}
-                ref={setCamera}
-                onMountError={(error) => {
-                  console.log("cammera error", error);
-                }}
-              >
-                {inputValue.photo && (
+              {isLoadingPhoto ? (
+                <View style={styles.loaderContainer}>
                   <Image
-                    style={styles.photo}
-                    source={{ uri: inputValue.photo }}
+                    source={loaderGradient}
+                    style={styles.loaderBackground}
                   />
-                )}
-                <TouchableOpacity
-                  onPress={takePhoto}
-                  activeOpacity={0.5}
-                  style={{
-                    ...styles.cameraIcon,
-                    backgroundColor: inputValue.photo
-                      ? "rgba(255, 255, 255, 0.3)"
-                      : "#fff",
+                  <ActivityIndicator
+                    style={styles.loader}
+                    size="small"
+                    color="#000"
+                  />
+                  <Text style={styles.loaderTitle}>Loadng photo...</Text>
+                  <Text style={styles.loaderDescr}>
+                    You can still add title and location
+                  </Text>
+                </View>
+              ) : (
+                <Camera
+                  style={styles.camera}
+                  ref={setCamera}
+                  onMountError={(error) => {
+                    console.log("cammera error", error);
                   }}
                 >
-                  <FontAwesome
-                    name="camera"
-                    size={24}
-                    color={inputValue.photo ? "#fff" : "#BDBDBD"}
-                  />
-                </TouchableOpacity>
-              </Camera>
+                  {inputValue.photo && (
+                    <Image
+                      style={styles.photo}
+                      source={{ uri: inputValue.photo }}
+                    />
+                  )}
+                  <TouchableOpacity
+                    onPress={takePhoto}
+                    activeOpacity={0.5}
+                    style={{
+                      ...styles.cameraIcon,
+                      backgroundColor: inputValue.photo
+                        ? "rgba(255, 255, 255, 0.3)"
+                        : "#fff",
+                    }}
+                  >
+                    <FontAwesome
+                      name="camera"
+                      size={24}
+                      color={inputValue.photo ? "#fff" : "#BDBDBD"}
+                    />
+                  </TouchableOpacity>
+                </Camera>
+              )}
             </View>
             <Text style={styles.cameraContainerDescription}>
               {!inputValue.photo ? "Upload photo" : "Change photo"}
@@ -178,7 +202,6 @@ export const CreatePostScreen = ({ navigation }) => {
             style={styles.deleteBtn}
             onPress={() => {
               setInputValue(initialState);
-              // setPhotoResult(null);
             }}
           >
             <Feather name="trash-2" size={24} color="#BDBDBD" />
