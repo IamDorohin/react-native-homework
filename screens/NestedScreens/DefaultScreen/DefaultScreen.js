@@ -10,14 +10,14 @@ const userPhoto = require("../../../assets/photo.png");
 
 export const DefaultScreen = ({ navigation, route }) => {
   const [postsArray, setPostsArray] = useState([]);
-  console.log("route.params", route.params);
+
   useEffect(() => {
     if (route.params) {
       setPostsArray((prevState) => [...prevState, route.params]);
     }
   }, [route.params]);
 
-  console.log("postsArray", postsArray);
+  console.log("route.params", route.params);
   return (
     <View style={styles.postsContainer}>
       {postsArray && (

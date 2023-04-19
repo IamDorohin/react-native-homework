@@ -37,6 +37,7 @@ export const HomeScreen = () => {
         name="Create Post"
         component={CreatePostScreen}
         options={({ navigation }) => ({
+          unmountOnBlur: true,
           headerLeft: ({}) => (
             <View>
               <MaterialIcons

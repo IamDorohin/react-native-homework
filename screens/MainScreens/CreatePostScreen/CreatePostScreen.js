@@ -33,18 +33,27 @@ export const CreatePostScreen = ({ navigation }) => {
   const [activeInput, setActiveInput] = useState("");
   const [inputValue, setInputValue] = useState(initialState);
   const [camera, setCamera] = useState(null);
-  const [photoResult, setPhotoResult] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+    })();
+  }, []);
 
   const takePhoto = async () => {
     const { uri } = await camera.takePictureAsync();
-    setPhotoResult(uri);
 
-    const location = await Location.getCurrentPositionAsync({});
+    let location = await Location.getCurrentPositionAsync({});
+    // setCurrentLocation(location);
 
     setInputValue((prevState) => ({
       ...prevState,
       photo: uri,
-      coords: location.coords,
+      coords: location,
     }));
   };
 
@@ -70,19 +79,8 @@ export const CreatePostScreen = ({ navigation }) => {
   const submitHandler = async () => {
     console.log("created", inputValue);
     navigation.navigate("Posts", inputValue);
-    await setInputValue(initialState);
-    setPhotoResult(null);
+    setInputValue(initialState);
   };
-
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
-    })();
-  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={showKeyboardHandler}>
@@ -107,15 +105,18 @@ export const CreatePostScreen = ({ navigation }) => {
                   console.log("cammera error", error);
                 }}
               >
-                {photoResult && (
-                  <Image style={styles.photo} source={{ uri: photoResult }} />
+                {inputValue.photo && (
+                  <Image
+                    style={styles.photo}
+                    source={{ uri: inputValue.photo }}
+                  />
                 )}
                 <TouchableOpacity
                   onPress={takePhoto}
                   activeOpacity={0.5}
                   style={{
                     ...styles.cameraIcon,
-                    backgroundColor: photoResult
+                    backgroundColor: inputValue.photo
                       ? "rgba(255, 255, 255, 0.3)"
                       : "#fff",
                   }}
@@ -123,13 +124,13 @@ export const CreatePostScreen = ({ navigation }) => {
                   <FontAwesome
                     name="camera"
                     size={24}
-                    color={photoResult ? "#fff" : "#BDBDBD"}
+                    color={inputValue.photo ? "#fff" : "#BDBDBD"}
                   />
                 </TouchableOpacity>
               </Camera>
             </View>
             <Text style={styles.cameraContainerDescription}>
-              {!photoResult ? "Upload photo" : "Change photo"}
+              {!inputValue.photo ? "Upload photo" : "Change photo"}
             </Text>
             <TextInput
               onFocus={() => activeInputHandler("title")}
@@ -179,7 +180,7 @@ export const CreatePostScreen = ({ navigation }) => {
             style={styles.deleteBtn}
             onPress={() => {
               setInputValue(initialState);
-              setPhotoResult(null);
+              // setPhotoResult(null);
             }}
           >
             <Feather name="trash-2" size={24} color="#BDBDBD" />
