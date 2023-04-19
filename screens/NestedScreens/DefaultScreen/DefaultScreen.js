@@ -39,10 +39,15 @@ export const DefaultScreen = ({ navigation, route }) => {
                 <Image source={{ uri: item.photo }} style={styles.photo} />
                 <Text style={styles.postTitle}>{item.title}</Text>
                 <View style={styles.descriptionContainer}>
-                  <View style={styles.descriptionItem}>
+                  <TouchableOpacity
+                    style={styles.descriptionItem}
+                    onPress={() => {
+                      navigation.navigate("Comments", { data: route.params });
+                    }}
+                  >
                     <EvilIcons name="comment" size={24} color="#BDBDBD" />
                     <Text style={{ color: "#212121", marginLeft: 5 }}>0</Text>
-                  </View>
+                  </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.descriptionItem}
                     onPress={() => {

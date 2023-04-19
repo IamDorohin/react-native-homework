@@ -16,7 +16,6 @@ import {
   Image,
   Text,
   TextInput,
-  å,
 } from "react-native";
 import styles from "./CreatePostScreen.styled";
 

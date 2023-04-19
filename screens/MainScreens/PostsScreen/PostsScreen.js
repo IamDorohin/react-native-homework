@@ -43,6 +43,9 @@ export const PostsScreen = () => {
       <nestedScreen.Screen
         name="Comments"
         component={CommentsScreen}
+        options={() => ({
+          tabBarStyle: { display: "none" },
+        })}
       ></nestedScreen.Screen>
       <nestedScreen.Screen
         name="Map"
