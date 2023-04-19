@@ -48,7 +48,6 @@ export const CreatePostScreen = ({ navigation }) => {
     const { uri } = await camera.takePictureAsync();
 
     let location = await Location.getCurrentPositionAsync({});
-    // setCurrentLocation(location);
 
     setInputValue((prevState) => ({
       ...prevState,
