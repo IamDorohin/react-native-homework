@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { authSignIn } from "../../../redux/auth/authOperations";
 import {
   View,
   Image,
@@ -25,6 +27,8 @@ export const LoginScreen = ({ navigation }) => {
   const [activeInput, setActiveInput] = useState("");
   const [inputValue, setInputValue] = useState(initialState);
 
+  const dispatch = useDispatch();
+
   const inputValueHandler = (input, value) => {
     setInputValue((prevState) => ({ ...prevState, [input]: value }));
   };
@@ -46,6 +50,7 @@ export const LoginScreen = ({ navigation }) => {
 
   const submitHandler = () => {
     console.log(inputValue);
+    dispatch(authSignIn(inputValue));
     setInputValue(initialState);
     navigation.navigate("Home");
   };

@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { authSignUp } from "../../../redux/auth/authOperations";
 import {
   View,
   Image,
@@ -28,6 +30,8 @@ export const RegistrationScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [activeInput, setActiveInput] = useState("");
   const [inputValue, setInputValue] = useState(initialState);
+
+  const dispatch = useDispatch();
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -66,6 +70,7 @@ export const RegistrationScreen = ({ navigation }) => {
 
   const submitHandler = () => {
     console.log(inputValue);
+    dispatch(authSignUp(inputValue));
     setInputValue(initialState);
     navigation.navigate("Home");
   };
