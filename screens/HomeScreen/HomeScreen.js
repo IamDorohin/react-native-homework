@@ -5,7 +5,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 import { View } from "react-native";
 
-import { CommentsScreen } from "../NestedScreens/CommentsScreen/CommentsScreen";
 import { PostsScreen } from "../MainScreens/PostsScreen/PostsScreen";
 import { CreatePostScreen } from "../MainScreens/CreatePostScreen/CreatePostScreen";
 import { ProfileScreen } from "../MainScreens/ProfileScreen/ProfileScreen";
@@ -81,24 +80,6 @@ export const HomeScreen = () => {
           ),
         }}
       />
-      {/* <MainTab.Screen
-        options={({ navigation }) => ({
-          tabBarItemStyle: { display: "none" },
-          headerLeft: ({}) => (
-            <View>
-              <MaterialIcons
-                onPress={() => navigation.goBack("Posts")}
-                name="keyboard-backspace"
-                size={24}
-                color="#000"
-                style={{ marginLeft: 20 }}
-              />
-            </View>
-          ),
-        })}
-        name="MapScreen"
-        component={MapScreen}
-      /> */}
     </MainTab.Navigator>
   );
 };

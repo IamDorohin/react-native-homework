@@ -4,6 +4,7 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 import { AuthSlice } from "./authReducer";
 import { app } from "../../firebase/config";
@@ -19,6 +20,7 @@ export const authSignUp =
         email,
         password
       );
+
       await updateProfile(user, { displayName: login, photoURL: avatar });
 
       const { displayName, uid } = await auth.currentUser;
@@ -39,37 +41,28 @@ export const authSignIn =
   async (dispatch, getState) => {
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
-      console.log("logged in user", user);
+      console.log("loggedIn user", user);
     } catch (error) {
       console.log(error);
     }
   };
 
-const authSignOut = () => async (dispatch, getState) => {};
-
 export const authStateChangeUser = () => async (dispatch, getState) => {
   await onAuthStateChanged(auth, (user) => {
-    console.log("user", user);
-    if (user) {
-      const currentUserData = {
-        nickName: user.displayName,
-        userId: user.uid,
-      };
+    console.log("is current user?", user);
+    if (!user) return;
 
-      dispatch(AuthSlice.actions.updateUserProfile(currentUserData));
-      dispatch(AuthSlice.actions.authStateChange({ stateChange: true }));
-    }
+    const currentUserData = {
+      nickName: user.displayName,
+      userId: user.uid,
+    };
+
+    dispatch(AuthSlice.actions.authStateChange({ stateChange: true }));
+    dispatch(AuthSlice.actions.updateUserProfile(currentUserData));
   });
-  // await onAuthStateChanged(auth, (user) => {
-  //   console.log("user", user);
-  //   if (user) {
-  //     const currentUserData = {
-  //       nickName: user.displayName,
-  //       userId: user.uid,
-  //     };
+};
 
-  //     dispatch(AuthSlice.actions.updateUserProfile(currentUserData));
-  //     dispatch(AuthSlice.actions.authStateChange({ stateChange: true }));
-  //   }
-  // });
+export const authSignOutUser = () => async (dispatch, getState) => {
+  await signOut(auth);
+  dispatch(AuthSlice.actions.authSignOut());
 };

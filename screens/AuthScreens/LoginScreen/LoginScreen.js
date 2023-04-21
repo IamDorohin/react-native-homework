@@ -48,11 +48,11 @@ export const LoginScreen = ({ navigation }) => {
     setActiveInput("");
   };
 
-  const submitHandler = () => {
+  const submitHandler = async () => {
     console.log(inputValue);
-    dispatch(authSignIn(inputValue));
+    await dispatch(authSignIn(inputValue));
     setInputValue(initialState);
-    navigation.navigate("Home");
+    // navigation.navigate("PostsScreen");
   };
 
   return (

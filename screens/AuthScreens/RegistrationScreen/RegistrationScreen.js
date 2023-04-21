@@ -72,7 +72,7 @@ export const RegistrationScreen = ({ navigation }) => {
     console.log(inputValue);
     dispatch(authSignUp(inputValue));
     setInputValue(initialState);
-    navigation.navigate("Home");
+    // navigation.navigate("Home");
   };
 
   return (
