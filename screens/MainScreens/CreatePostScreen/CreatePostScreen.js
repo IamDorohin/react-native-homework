@@ -7,6 +7,9 @@ import { nanoid } from "nanoid";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 
+import { getStorage, ref, uploadBytes } from "firebase/storage";
+const storage = getStorage();
+
 const loaderGradient = require("../../../assets/loader-gradient.jpeg");
 
 import {
@@ -69,6 +72,13 @@ export const CreatePostScreen = ({ navigation }) => {
     }));
   };
 
+  const uploadedUserImage = async () => {
+    const storageRef = ref(storage, `postsImages/${inputValue.id}.jpg`);
+    const response = await fetch(inputValue.photo);
+    const uploadedFile = await response.blob();
+    await uploadBytes(storageRef, uploadedFile);
+  };
+
   const showKeyboardHandler = () => {
     setIsShowKeyboard(false);
     setActiveInput("");
@@ -82,6 +92,7 @@ export const CreatePostScreen = ({ navigation }) => {
 
   const submitHandler = async () => {
     console.log("created", inputValue);
+    uploadedUserImage();
     navigation.navigate("Posts", inputValue);
     setInputValue(initialState);
   };
@@ -211,3 +222,12 @@ export const CreatePostScreen = ({ navigation }) => {
     </TouchableWithoutFeedback>
   );
 };
+
+// rules_version = '2';
+// service firebase.storage {
+//   match /b/{bucket}/o {
+//     match /{allPaths=**} {
+//       allow read, write: if false;
+//     }
+//   }
+// }

@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     height: 240,
     borderRadius: 8,
     backgroundColor: "#E8E8E8",
+    overflow: "hidden",
   },
   loaderContainer: {
     justifyContent: "center",
