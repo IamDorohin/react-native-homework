@@ -16,7 +16,7 @@ export const DefaultScreen = ({ navigation }) => {
   const getAllPosts = async () => {
     await onSnapshot(collection(db, "posts"), (snapshot) => {
       snapshot.docs.forEach((doc) =>
-        setPostsArray({ ...doc.data(), id: doc.id })
+        setPostsArray([{ ...doc.data(), id: doc.id }])
       );
     });
   };
@@ -49,20 +49,20 @@ export const DefaultScreen = ({ navigation }) => {
                 <View style={styles.descriptionContainer}>
                   <TouchableOpacity
                     style={styles.descriptionItem}
-                    // onPress={() => {
-                    //   navigation.navigate("Comments", {
-                    //     data: route.params,
-                    //   });
-                    // }}
+                    onPress={() => {
+                      navigation.navigate("Comments", {
+                        data: item,
+                      });
+                    }}
                   >
                     <EvilIcons name="comment" size={24} color="#BDBDBD" />
                     <Text style={{ color: "#212121", marginLeft: 5 }}>0</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.descriptionItem}
-                    // onPress={() => {
-                    //   navigation.navigate("Map", { data: route.params });
-                    // }}
+                    onPress={() => {
+                      navigation.navigate("Map", { data: item.coords });
+                    }}
                   >
                     <EvilIcons name="location" size={24} color="#BDBDBD" />
                     <Text style={styles.descriptionItemText}>
