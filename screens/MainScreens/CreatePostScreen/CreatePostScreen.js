@@ -3,10 +3,13 @@ import { EvilIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../../firebase/config";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 const storage = getStorage();
 
@@ -26,7 +29,6 @@ import {
 import styles from "./CreatePostScreen.styled";
 
 const initialState = {
-  photo: null,
   title: "",
   location: "",
   id: "",
@@ -39,6 +41,9 @@ export const CreatePostScreen = ({ navigation }) => {
   const [inputValue, setInputValue] = useState(initialState);
   const [camera, setCamera] = useState(null);
   const [isLoadingPhoto, setIsLoadingPhoto] = useState(false);
+  const [takenPhoto, setTakenPhoto] = useState(null);
+
+  const { userId, nickName } = useSelector((state) => state.auth);
 
   useEffect(() => {
     (async () => {
@@ -54,14 +59,14 @@ export const CreatePostScreen = ({ navigation }) => {
     const { uri } = await camera.takePictureAsync();
 
     setIsLoadingPhoto(true);
-    let location = await Location.getCurrentPositionAsync({});
+    let { coords } = await Location.getCurrentPositionAsync({});
     setIsLoadingPhoto(false);
 
     setInputValue((prevState) => ({
       ...prevState,
-      photo: uri,
-      coords: location,
+      coords: coords,
     }));
+    setTakenPhoto(uri);
   };
 
   const inputValueHandler = (input, value) => {
@@ -74,7 +79,7 @@ export const CreatePostScreen = ({ navigation }) => {
 
   const uploadedUserImage = async () => {
     const storageRef = ref(storage, `postsImages/${inputValue.id}.jpg`);
-    const response = await fetch(inputValue.photo);
+    const response = await fetch(takenPhoto);
     const uploadedFile = await response.blob();
     await uploadBytes(storageRef, uploadedFile);
 
@@ -82,7 +87,27 @@ export const CreatePostScreen = ({ navigation }) => {
       ref(storage, `postsImages/${inputValue.id}.jpg`)
     );
 
-    console.log("photoUrl", photoUrl);
+    setInputValue((prevState) => ({
+      ...prevState,
+    }));
+
+    return photoUrl;
+  };
+
+  const createPost = async () => {
+    const createdPhoto = await uploadedUserImage();
+
+    try {
+      const docRef = await addDoc(collection(db, "posts"), {
+        ...inputValue,
+        photo: createdPhoto,
+        userId,
+        nickName,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   const showKeyboardHandler = () => {
@@ -97,9 +122,8 @@ export const CreatePostScreen = ({ navigation }) => {
   };
 
   const submitHandler = async () => {
-    console.log("created", inputValue);
-    uploadedUserImage();
-    navigation.navigate("Posts", inputValue);
+    createPost();
+    navigation.navigate("Posts");
     setInputValue(initialState);
   };
 
@@ -130,7 +154,7 @@ export const CreatePostScreen = ({ navigation }) => {
                     size="small"
                     color="#000"
                   />
-                  <Text style={styles.loaderTitle}>Loadng photo...</Text>
+                  <Text style={styles.loaderTitle}>Loading photo...</Text>
                   <Text style={styles.loaderDescr}>
                     You can still add title and location
                   </Text>
@@ -143,18 +167,15 @@ export const CreatePostScreen = ({ navigation }) => {
                     console.log("cammera error", error);
                   }}
                 >
-                  {inputValue.photo && (
-                    <Image
-                      style={styles.photo}
-                      source={{ uri: inputValue.photo }}
-                    />
+                  {takenPhoto && (
+                    <Image style={styles.photo} source={{ uri: takenPhoto }} />
                   )}
                   <TouchableOpacity
                     onPress={takePhoto}
                     activeOpacity={0.5}
                     style={{
                       ...styles.cameraIcon,
-                      backgroundColor: inputValue.photo
+                      backgroundColor: takenPhoto
                         ? "rgba(255, 255, 255, 0.3)"
                         : "#fff",
                     }}
@@ -162,14 +183,14 @@ export const CreatePostScreen = ({ navigation }) => {
                     <FontAwesome
                       name="camera"
                       size={24}
-                      color={inputValue.photo ? "#fff" : "#BDBDBD"}
+                      color={takenPhoto ? "#fff" : "#BDBDBD"}
                     />
                   </TouchableOpacity>
                 </Camera>
               )}
             </View>
             <Text style={styles.cameraContainerDescription}>
-              {!inputValue.photo ? "Upload photo" : "Change photo"}
+              {!takenPhoto ? "Upload photo" : "Change photo"}
             </Text>
             <TextInput
               onFocus={() => activeInputHandler("title")}
@@ -219,6 +240,7 @@ export const CreatePostScreen = ({ navigation }) => {
             style={styles.deleteBtn}
             onPress={() => {
               setInputValue(initialState);
+              setTakenPhoto(null);
             }}
           >
             <Feather name="trash-2" size={24} color="#BDBDBD" />

@@ -3,21 +3,29 @@ import { Feather } from "@expo/vector-icons";
 
 import { useState, useEffect } from "react";
 import { View, FlatList, Image, Text, TouchableOpacity } from "react-native";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../../firebase/config";
 
 import styles from "./DefaultScreen.styled";
 
 const userPhoto = require("../../../assets/photo.png");
 
-export const DefaultScreen = ({ navigation, route }) => {
+export const DefaultScreen = ({ navigation }) => {
   const [postsArray, setPostsArray] = useState([]);
 
-  useEffect(() => {
-    if (route.params) {
-      setPostsArray((prevState) => [...prevState, route.params]);
-    }
-  }, [route.params]);
+  const getAllPosts = async () => {
+    await onSnapshot(collection(db, "posts"), (snapshot) => {
+      snapshot.docs.forEach((doc) =>
+        setPostsArray({ ...doc.data(), id: doc.id })
+      );
+    });
+  };
 
-  console.log("route.params", route.params);
+  useEffect(() => {
+    getAllPosts();
+  }, []);
+
+  console.log("postsArray", postsArray);
   return (
     <View style={styles.postsContainer}>
       {postsArray && (
@@ -41,20 +49,20 @@ export const DefaultScreen = ({ navigation, route }) => {
                 <View style={styles.descriptionContainer}>
                   <TouchableOpacity
                     style={styles.descriptionItem}
-                    onPress={() => {
-                      navigation.navigate("Comments", {
-                        data: route.params,
-                      });
-                    }}
+                    // onPress={() => {
+                    //   navigation.navigate("Comments", {
+                    //     data: route.params,
+                    //   });
+                    // }}
                   >
                     <EvilIcons name="comment" size={24} color="#BDBDBD" />
                     <Text style={{ color: "#212121", marginLeft: 5 }}>0</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.descriptionItem}
-                    onPress={() => {
-                      navigation.navigate("Map", { data: route.params });
-                    }}
+                    // onPress={() => {
+                    //   navigation.navigate("Map", { data: route.params });
+                    // }}
                   >
                     <EvilIcons name="location" size={24} color="#BDBDBD" />
                     <Text style={styles.descriptionItemText}>
