@@ -7,7 +7,7 @@ import { nanoid } from "nanoid";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 const storage = getStorage();
 
 const loaderGradient = require("../../../assets/loader-gradient.jpeg");
@@ -77,6 +77,12 @@ export const CreatePostScreen = ({ navigation }) => {
     const response = await fetch(inputValue.photo);
     const uploadedFile = await response.blob();
     await uploadBytes(storageRef, uploadedFile);
+
+    const photoUrl = await getDownloadURL(
+      ref(storage, `postsImages/${inputValue.id}.jpg`)
+    );
+
+    console.log("photoUrl", photoUrl);
   };
 
   const showKeyboardHandler = () => {
