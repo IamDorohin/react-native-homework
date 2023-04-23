@@ -25,7 +25,6 @@ export const DefaultScreen = ({ navigation }) => {
     getAllPosts();
   }, []);
 
-  console.log("postsArray", postsArray);
   return (
     <View style={styles.postsContainer}>
       {postsArray && (

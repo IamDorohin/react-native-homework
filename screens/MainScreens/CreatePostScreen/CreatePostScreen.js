@@ -43,7 +43,7 @@ export const CreatePostScreen = ({ navigation }) => {
   const [isLoadingPhoto, setIsLoadingPhoto] = useState(false);
   const [takenPhoto, setTakenPhoto] = useState(null);
 
-  const { userId, nickName } = useSelector((state) => state.auth);
+  const { userId, nickName, userPhoto } = useSelector((state) => state.auth);
 
   useEffect(() => {
     (async () => {
@@ -103,6 +103,7 @@ export const CreatePostScreen = ({ navigation }) => {
         photo: createdPhoto,
         userId,
         nickName,
+        userPhoto,
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {

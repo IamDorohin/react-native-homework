@@ -6,16 +6,57 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "#fff",
   },
-  innerContainer: {
+  photoContainer: {
     paddingTop: 32,
     alignItems: "center",
     marginHorizontal: 16,
-    height: "100%",
   },
   photo: {
     height: 240,
     width: "100%",
+    marginHorizontal: 16,
     borderRadius: 8,
+  },
+  commentsContainer: {
+    paddingTop: 32,
+    marginHorizontal: 16,
+  },
+  currentUserComment: {
+    flexDirection: "row-reverse",
+    flexWrap: "nowrap",
+    paddingRight: 60,
+    width: "100%",
+    marginBottom: 24,
+  },
+  currentUserCommentDescr: {
+    width: "100%",
+    marginRight: 16,
+    backgroundColor: "teal",
+    borderRadius: 6,
+    borderTopRightRadius: 0,
+    padding: 10,
+  },
+  currentUserNickName: {
+    // textAlign: "left",
+    fontWeight: "bold",
+    marginBottom: 6,
+  },
+  currentUserText: {
+    marginBottom: 6,
+  },
+  currentUserCommentDate: {},
+  otherUserComment: {
+    textAlign: "right",
+    flexDirection: "row",
+    flexWrap: "nowrap",
+    paddingRight: 60,
+    width: "100%",
+    marginBottom: 24,
+  },
+  commentUserPhoto: {
+    height: 40,
+    width: 40,
+    borderRadius: 50,
   },
   inputContainer: {
     position: "absolute",

@@ -8,8 +8,24 @@ import {
 } from "firebase/auth";
 import { AuthSlice } from "./authReducer";
 import { app } from "../../firebase/config";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
+const storage = getStorage();
 const auth = getAuth(app);
+
+const uploadedUserImage = async (displayName, avatar) => {
+  console.log("avatar for get url", avatar);
+  const storageRef = ref(storage, `usersAvatars/${displayName}.jpg`);
+  const response = await fetch(avatar);
+  const uploadedFile = await response.blob();
+  await uploadBytes(storageRef, uploadedFile);
+
+  const photoUrl = await getDownloadURL(
+    ref(storage, `usersAvatars/${displayName}.jpg`)
+  );
+  console.log("done photo url", photoUrl);
+  return photoUrl;
+};
 
 export const authSignUp =
   ({ avatar, login, email, password }) =>
@@ -20,14 +36,18 @@ export const authSignUp =
         email,
         password
       );
-
-      await updateProfile(user, { displayName: login, photoURL: avatar });
+      console.log("uploaded user avatar", avatar);
+      await updateProfile(user, { displayName: login });
 
       const { displayName, uid } = await auth.currentUser;
+
+      const userAvatar = await uploadedUserImage(login, avatar);
+      console.log("avatar for user", userAvatar);
 
       const currentUserData = {
         nickName: displayName,
         userId: uid,
+        userPhoto: userAvatar,
       };
 
       dispatch(AuthSlice.actions.updateUserProfile(currentUserData));
