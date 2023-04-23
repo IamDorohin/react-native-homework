@@ -6,24 +6,22 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { AuthSlice } from "./authReducer";
 import { app } from "../../firebase/config";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
-const storage = getStorage();
 const auth = getAuth(app);
+const storage = getStorage();
 
-const uploadedUserImage = async (displayName, avatar) => {
-  console.log("avatar for get url", avatar);
-  const storageRef = ref(storage, `usersAvatars/${displayName}.jpg`);
+const uploadedUserImage = async (login, avatar) => {
+  const storageRef = ref(storage, `usersAvatars/${login}.jpg`);
   const response = await fetch(avatar);
   const uploadedFile = await response.blob();
   await uploadBytes(storageRef, uploadedFile);
 
   const photoUrl = await getDownloadURL(
-    ref(storage, `usersAvatars/${displayName}.jpg`)
+    ref(storage, `usersAvatars/${login}.jpg`)
   );
-  console.log("done photo url", photoUrl);
   return photoUrl;
 };
 
@@ -36,18 +34,17 @@ export const authSignUp =
         email,
         password
       );
-      console.log("uploaded user avatar", avatar);
-      await updateProfile(user, { displayName: login });
-
-      const { displayName, uid } = await auth.currentUser;
 
       const userAvatar = await uploadedUserImage(login, avatar);
-      console.log("avatar for user", userAvatar);
+
+      await updateProfile(user, { displayName: login, photoURL: userAvatar });
+
+      const { displayName, uid, photoURL } = await auth.currentUser;
 
       const currentUserData = {
         nickName: displayName,
         userId: uid,
-        userPhoto: userAvatar,
+        userPhoto: photoURL,
       };
 
       dispatch(AuthSlice.actions.updateUserProfile(currentUserData));
@@ -70,15 +67,15 @@ export const authSignIn =
 export const authStateChangeUser = () => async (dispatch, getState) => {
   await onAuthStateChanged(auth, (user) => {
     console.log("is current user?", user);
-    if (!user) return;
-
-    const currentUserData = {
-      nickName: user.displayName,
-      userId: user.uid,
-    };
-
-    dispatch(AuthSlice.actions.authStateChange({ stateChange: true }));
-    dispatch(AuthSlice.actions.updateUserProfile(currentUserData));
+    if (user) {
+      const currentUserData = {
+        nickName: user.displayName,
+        userId: user.uid,
+        userPhoto: user.photoURL,
+      };
+      dispatch(AuthSlice.actions.authStateChange({ stateChange: true }));
+      dispatch(AuthSlice.actions.updateUserProfile(currentUserData));
+    }
   });
 };
 

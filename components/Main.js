@@ -11,7 +11,6 @@ const auth = getAuth(app);
 export const Main = () => {
   const { stateChange } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  console.log("stateChange", stateChange);
 
   useEffect(() => {
     dispatch(authStateChangeUser());

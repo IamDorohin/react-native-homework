@@ -25,6 +25,7 @@ export const DefaultScreen = ({ navigation }) => {
     getAllPosts();
   }, []);
 
+  console.log("postsArray", postsArray);
   return (
     <View style={styles.postsContainer}>
       {postsArray && (
@@ -40,7 +41,7 @@ export const DefaultScreen = ({ navigation }) => {
           </View>
           <FlatList
             data={postsArray}
-            keyExtractor={(item, indx) => indx.toString()}
+            keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <View title={item.title} style={styles.post}>
                 <Image source={{ uri: item.photo }} style={styles.photo} />
