@@ -1,6 +1,14 @@
 import { AntDesign } from "@expo/vector-icons";
+import { nanoid } from "nanoid";
 import { useState, useEffect } from "react";
-import { collection, onSnapshot, addDoc } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  getDoc,
+  doc,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "../../../firebase/config";
 import {
   View,
@@ -15,38 +23,38 @@ import styles from "./CommentsScreen.styled";
 
 export const CommentsScreen = ({ route }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [newComment, setNewComment] = useState("");
+
   console.log("route", route);
   const { id, photo } = route.params.data;
 
-  //   try {
-  //   const docRef = await addDoc(collection(db, "posts"), {
-  //     ...inputValue,
-  //     photo: createdPhoto,
-  //     userId,
-  //     nickName,
-  //   });
-  //   console.log("Document written with ID: ", docRef.id);
-  // } catch (e) {
-  //   console.error("Error adding document: ", e);
-  //   }
+  const newCommentHandler = (comment) => {
+    setNewComment(comment);
+  };
 
   const addComment = async () => {
+    // const docRef = doc(db, "posts", id);
+    // const currentPost = await getDoc(docRef);
+    // const messageRef = addDoc(db, "posts", id, "comments");
+    // console.log("messageRef", messageRef);
     try {
-      const ref = await collection(db, "posts");
-      const test = await addDoc(collection(ref), {});
+      const docRef = await addDoc(collection(db, "posts", id, "comments"), {
+        newComment,
+      });
       console.log("Document written with ID: ", docRef.id);
-    } catch (error) {
+    } catch (e) {
       console.error("Error adding document: ", e);
     }
-
-    //   doc(id).collection('comments').ad
-    // await onSnapshot(collection(db, "posts"), (snapshot) => {
-    //   snapshot.docs.forEach((doc) =>
-    //     setPostsArray([{ ...doc.data(), id: doc.id }])
-    //   );
-    // });
   };
-  addComment();
+
+  // const getAllComments = async () => {
+  //   await onSnapshot(collection(db, "posts", id, "comments"), (snapshot) => {
+  //     snapshot.docs.forEach((doc) =>
+  //       setPostsArray([{ ...doc.data(), id: doc.id }])
+  //     );
+  //   });
+  // };
+
   // useEffect(() => {
   //   getAllPosts();
   // }, []);
@@ -60,6 +68,11 @@ export const CommentsScreen = ({ route }) => {
     Keyboard.dismiss();
   };
 
+  const submitHandler = async () => {
+    addComment();
+    setNewComment("");
+  };
+
   return (
     <TouchableWithoutFeedback onPress={showKeyboardHandler}>
       <View style={styles.screenContainer}>
@@ -67,13 +80,15 @@ export const CommentsScreen = ({ route }) => {
           <Image style={styles.photo} source={{ uri: photo }} />
           <View style={styles.inputContainer}>
             <TextInput
-              onFocus={() => activeInputHandler()}
+              onChangeText={(value) => newCommentHandler(value)}
               onEndEditing={() => showKeyboardHandler()}
-              style={styles.input}
+              onFocus={() => activeInputHandler()}
               placeholder={"Write a comment..."}
               placeholderTextColor={"#BDBDBD"}
+              style={styles.input}
+              value={newComment}
             />
-            <TouchableOpacity style={styles.commentBtn}>
+            <TouchableOpacity style={styles.commentBtn} onPress={submitHandler}>
               <AntDesign name="up" size={18} color="#fff" />
             </TouchableOpacity>
           </View>
