@@ -71,6 +71,7 @@ export const HomeScreen = () => {
         name="Profile"
         component={ProfileScreen}
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused, color, size }) => (
             <Feather
               name="user"

@@ -31,13 +31,12 @@ const styles = StyleSheet.create({
   currentUserCommentDescr: {
     width: "100%",
     marginRight: 16,
-    backgroundColor: "teal",
-    borderRadius: 6,
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
+    borderRadius: 10,
     borderTopRightRadius: 0,
     padding: 10,
   },
   currentUserNickName: {
-    // textAlign: "left",
     fontWeight: "bold",
     marginBottom: 6,
   },
@@ -52,6 +51,14 @@ const styles = StyleSheet.create({
     paddingRight: 60,
     width: "100%",
     marginBottom: 24,
+  },
+  otherUserCommentDescr: {
+    width: "100%",
+    marginLeft: 16,
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
+    borderRadius: 10,
+    borderTopLeftRadius: 0,
+    padding: 10,
   },
   commentUserPhoto: {
     height: 40,

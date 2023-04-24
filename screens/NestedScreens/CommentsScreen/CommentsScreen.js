@@ -20,6 +20,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
+import dayjs from "dayjs";
 
 import styles from "./CommentsScreen.styled";
 
@@ -45,6 +46,10 @@ export const CommentsScreen = ({ route }) => {
     });
   };
 
+  allComments.map((comment) => {
+    const myDate = dayjs(comment.createdAt).format("DD MMMM, YYYY | HH:mm");
+  });
+
   useEffect(() => {
     getAllComments();
   }, []);
@@ -54,7 +59,7 @@ export const CommentsScreen = ({ route }) => {
   }, [allComments]);
 
   useEffect(() => {
-    testFunction();
+    updateCommentsNumber();
   }, [commentsNumber]);
 
   const addComment = async () => {
@@ -82,14 +87,11 @@ export const CommentsScreen = ({ route }) => {
   };
 
   const upd = (allComments) => {
-    console.log("allComments", allComments);
     const test = allComments;
-    console.log("test", test);
     setCommentsNumber(test);
   };
 
-  const testFunction = async () => {
-    console.log("commentsNumber", commentsNumber);
+  const updateCommentsNumber = async () => {
     const postsCollectionRef = doc(db, "posts", id);
     await updateDoc(postsCollectionRef, {
       commentsNumber,
@@ -124,7 +126,13 @@ export const CommentsScreen = ({ route }) => {
                     source={{ uri: item.userPhoto }}
                     style={styles.commentUserPhoto}
                   />
-                  <View style={styles.currentUserCommentDescr}>
+                  <View
+                    style={
+                      item.userId === userId
+                        ? styles.currentUserCommentDescr
+                        : styles.otherUserCommentDescr
+                    }
+                  >
                     <Text style={styles.currentUserNickName}>
                       {item.userNickName}
                     </Text>
@@ -132,7 +140,8 @@ export const CommentsScreen = ({ route }) => {
                       {item.newComment}
                     </Text>
                     <Text style={styles.currentUserCommentDate}>
-                      {item.createdAt}
+                      {/* {item.createdAt} */}
+                      {dayjs(item.createdAt).format("DD MMMM, YYYY | HH:mm")}
                     </Text>
                   </View>
                 </View>

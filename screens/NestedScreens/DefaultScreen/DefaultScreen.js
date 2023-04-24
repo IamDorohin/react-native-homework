@@ -3,7 +3,7 @@ import { Feather } from "@expo/vector-icons";
 
 import { useState, useEffect } from "react";
 import { View, FlatList, Image, Text, TouchableOpacity } from "react-native";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase/config";
 
 import styles from "./DefaultScreen.styled";
@@ -44,6 +44,11 @@ export const DefaultScreen = ({ navigation }) => {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <View title={item.title} style={styles.post}>
+                <View>
+                  <Image source={{ uri: item.userPhoto }} />
+                  <Text>{userPhoto.nickName}</Text>
+                  <Text>{}</Text>
+                </View>
                 <Image source={{ uri: item.photo }} style={styles.photo} />
                 <Text style={styles.postTitle}>{item.title}</Text>
                 <View style={styles.descriptionContainer}>

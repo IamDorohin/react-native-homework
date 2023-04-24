@@ -28,6 +28,8 @@ const styles = StyleSheet.create({
     width: 340,
     height: 240,
     borderRadius: 8,
+    borderColor: "black",
+    borderWidth: 1,
   },
   postTitle: {
     marginTop: 10,
