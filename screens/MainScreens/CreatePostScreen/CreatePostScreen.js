@@ -104,6 +104,7 @@ export const CreatePostScreen = ({ navigation }) => {
         userId,
         nickName,
         userPhoto,
+        commentsNumber: 0,
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {

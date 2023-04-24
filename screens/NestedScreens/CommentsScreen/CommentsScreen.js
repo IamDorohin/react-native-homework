@@ -1,7 +1,14 @@
 import { AntDesign } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { collection, onSnapshot, addDoc, Timestamp } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  Timestamp,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
 import { db } from "../../../firebase/config";
 import {
   View,
@@ -16,14 +23,13 @@ import {
 
 import styles from "./CommentsScreen.styled";
 
-export const CommentsScreen = ({ route }) => {
+export const CommentsScreen = ({ route, commentsCounter }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [allComments, setAllComments] = useState([]);
+  const [commentsNumber, setCommentsNumber] = useState(0);
 
   const { userId, nickName, userPhoto } = useSelector((state) => state.auth);
-  console.log("route", route);
-  console.log("allComments", allComments);
 
   const { id, photo } = route.params.data;
 
@@ -44,6 +50,12 @@ export const CommentsScreen = ({ route }) => {
     } catch (e) {
       console.error("Error adding document: ", e);
     }
+
+    const postsCollectionRef = doc(db, "posts", id);
+
+    await updateDoc(postsCollectionRef, {
+      commentsNumber: commentsNumber,
+    });
   };
 
   const getAllComments = async () => {

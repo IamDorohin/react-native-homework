@@ -56,7 +56,9 @@ export const DefaultScreen = ({ navigation }) => {
                     }}
                   >
                     <EvilIcons name="comment" size={24} color="#BDBDBD" />
-                    <Text style={{ color: "#212121", marginLeft: 5 }}>0</Text>
+                    <Text style={{ color: "#212121", marginLeft: 5 }}>
+                      {item.commentsNumber}
+                    </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.descriptionItem}
