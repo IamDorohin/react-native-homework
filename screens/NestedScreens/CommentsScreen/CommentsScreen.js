@@ -23,7 +23,7 @@ import {
 
 import styles from "./CommentsScreen.styled";
 
-export const CommentsScreen = ({ route, commentsCounter }) => {
+export const CommentsScreen = ({ route }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [allComments, setAllComments] = useState([]);
@@ -35,27 +35,6 @@ export const CommentsScreen = ({ route, commentsCounter }) => {
 
   const newCommentHandler = (comment) => {
     setNewComment(comment);
-  };
-
-  const addComment = async () => {
-    try {
-      const docRef = await addDoc(collection(db, "posts", id, "comments"), {
-        newComment,
-        createdAt: new Timestamp.now().toMillis(),
-        userId: userId,
-        userPhoto: userPhoto.toString(),
-        userNickName: nickName,
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-
-    const postsCollectionRef = doc(db, "posts", id);
-
-    await updateDoc(postsCollectionRef, {
-      commentsNumber: commentsNumber,
-    });
   };
 
   const getAllComments = async () => {
@@ -70,6 +49,29 @@ export const CommentsScreen = ({ route, commentsCounter }) => {
     getAllComments();
   }, []);
 
+  useEffect(() => {
+    upd(allComments.length);
+  }, [allComments]);
+
+  useEffect(() => {
+    testFunction();
+  }, [commentsNumber]);
+
+  const addComment = async () => {
+    try {
+      const docRef = await addDoc(collection(db, "posts", id, "comments"), {
+        newComment,
+        createdAt: new Timestamp.now().toMillis(),
+        userId: userId,
+        userPhoto: userPhoto.toString(),
+        userNickName: nickName,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
   const activeInputHandler = () => {
     setIsShowKeyboard(true);
   };
@@ -79,8 +81,23 @@ export const CommentsScreen = ({ route, commentsCounter }) => {
     Keyboard.dismiss();
   };
 
+  const upd = (allComments) => {
+    console.log("allComments", allComments);
+    const test = allComments;
+    console.log("test", test);
+    setCommentsNumber(test);
+  };
+
+  const testFunction = async () => {
+    console.log("commentsNumber", commentsNumber);
+    const postsCollectionRef = doc(db, "posts", id);
+    await updateDoc(postsCollectionRef, {
+      commentsNumber,
+    });
+  };
+
   const submitHandler = async () => {
-    addComment();
+    await addComment();
     setNewComment("");
   };
 
