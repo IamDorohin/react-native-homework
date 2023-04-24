@@ -3,7 +3,7 @@ import { Feather } from "@expo/vector-icons";
 
 import { useState, useEffect } from "react";
 import { View, FlatList, Image, Text, TouchableOpacity } from "react-native";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../../firebase/config";
 
 import styles from "./DefaultScreen.styled";
@@ -13,10 +13,10 @@ const userPhoto = require("../../../assets/photo.png");
 export const DefaultScreen = ({ navigation }) => {
   const [postsArray, setPostsArray] = useState([]);
 
-  const getAllPosts = async () => {
-    await onSnapshot(collection(db, "posts"), (snapshot) => {
-      snapshot.docs.forEach((doc) =>
-        setPostsArray([{ ...doc.data(), id: doc.id }])
+  const getAllPosts = () => {
+    onSnapshot(collection(db, "posts"), (snapshot) => {
+      setPostsArray(
+        snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       );
     });
   };
