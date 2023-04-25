@@ -6,15 +6,18 @@ import {
   Text,
   FlatList,
 } from "react-native";
-import {
-  AntDesign,
-  MaterialIcons,
-  EvilIcons,
-  Feather,
-} from "@expo/vector-icons";
+import { AntDesign, MaterialIcons, EvilIcons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
-import { collection, onSnapshot, addDoc, Timestamp } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  Timestamp,
+  updateDoc,
+  increment,
+  doc,
+} from "firebase/firestore";
 import { app } from "../../../firebase/config";
 import styles from "./ProfileScreen.styled";
 import { db } from "../../../firebase/config";
@@ -27,7 +30,7 @@ const background = require("../../../assets/img.png");
 
 export const ProfileScreen = ({ navigation }) => {
   const [postsArray, setPostsArray] = useState([]);
-  const [likesNumber, setLikesNumber] = useState(0);
+  // const [currentUserLike, setCurrentUserLike] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -44,6 +47,14 @@ export const ProfileScreen = ({ navigation }) => {
         snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       );
     });
+
+    // onSnapshot(collection(db, "posts", id, "likes"), (snapshot) => {
+    //   snapshot.docs.find((doc) => {
+    //     if ((doc.data().userId = userId)) {
+    //       setCurrentUserLike(true);
+    //     }
+    //   });
+    // });
   };
 
   useEffect(() => {
@@ -62,12 +73,10 @@ export const ProfileScreen = ({ navigation }) => {
     } catch (e) {
       console.error("Error adding document: ", e);
     }
-  };
 
-  const updateLikesNumber = async () => {
-    const postsCollectionRef = doc(db, "posts", id);
-    await updateDoc(postsCollectionRef, {
-      commentsNumber,
+    const likesRef = doc(db, "posts", id);
+    await updateDoc(likesRef, {
+      likesNumber: increment(1),
     });
   };
 
@@ -104,7 +113,7 @@ export const ProfileScreen = ({ navigation }) => {
                   <Text>{userPhoto.nickName}</Text>
                   <Text>{}</Text>
                 </View> */}
-                <Image source={{ uri: item.photo }} style={styles.photo} />
+                {/* <Image source={{ uri: item.photo }} style={styles.photo} /> */}
                 <Text style={styles.postTitle}>{item.title}</Text>
                 <View style={styles.descriptionContainer}>
                   <View style={styles.descriptionStats}>
@@ -126,7 +135,9 @@ export const ProfileScreen = ({ navigation }) => {
                       style={{ ...styles.descriptionItem, marginLeft: 25 }}
                     >
                       <AntDesign name="like2" size={18} color="#BDBDBD" />
-                      <Text style={{ color: "#212121", marginLeft: 5 }}>0</Text>
+                      <Text style={{ color: "#212121", marginLeft: 5 }}>
+                        {item.likesNumber}
+                      </Text>
                     </TouchableOpacity>
                   </View>
                   <TouchableOpacity

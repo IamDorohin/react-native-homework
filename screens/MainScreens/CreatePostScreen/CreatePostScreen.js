@@ -35,6 +35,8 @@ const initialState = {
   coords: {},
 };
 
+// const postImage = require("../../../assets/appCode.jpeg");
+
 export const CreatePostScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [activeInput, setActiveInput] = useState("");

@@ -47,7 +47,7 @@ export const CommentsScreen = ({ route }) => {
   };
 
   allComments.map((comment) => {
-    const myDate = dayjs(comment.createdAt).format("DD MMMM, YYYY | HH:mm");
+    dayjs(comment.createdAt).format("DD MMMM, YYYY | HH:mm");
   });
 
   useEffect(() => {

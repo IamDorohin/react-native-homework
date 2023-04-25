@@ -46,6 +46,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignContent: "space-between",
   },
+  descriptionStats: {
+    flexDirection: "row",
+    alignContent: "space-between",
+    alignItems: "center",
+  },
   descriptionItem: {
     flexDirection: "row",
   },

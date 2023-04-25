@@ -1,5 +1,4 @@
-import { EvilIcons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
+import { EvilIcons, AntDesign, Feather } from "@expo/vector-icons";
 
 import { useState, useEffect } from "react";
 import { View, FlatList, Image, Text, TouchableOpacity } from "react-native";
@@ -30,15 +29,6 @@ export const DefaultScreen = ({ navigation }) => {
     <View style={styles.postsContainer}>
       {postsArray && (
         <>
-          <View style={styles.userInfo}>
-            <Image source={userPhoto} style={styles.userPhoto} />
-            <View>
-              <Text style={{ color: "#212121" }}>Kostiantyn Dorohin</Text>
-              <Text style={{ color: "rgba(33, 33, 33, 0.8)" }}>
-                iamdorohin@gmail.com
-              </Text>
-            </View>
-          </View>
           <FlatList
             data={postsArray}
             keyExtractor={(item) => item.id}
@@ -52,19 +42,28 @@ export const DefaultScreen = ({ navigation }) => {
                 <Image source={{ uri: item.photo }} style={styles.photo} />
                 <Text style={styles.postTitle}>{item.title}</Text>
                 <View style={styles.descriptionContainer}>
-                  <TouchableOpacity
-                    style={styles.descriptionItem}
-                    onPress={() => {
-                      navigation.navigate("Comments", {
-                        data: item,
-                      });
-                    }}
-                  >
-                    <EvilIcons name="comment" size={24} color="#BDBDBD" />
-                    <Text style={{ color: "#212121", marginLeft: 5 }}>
-                      {item.commentsNumber}
-                    </Text>
-                  </TouchableOpacity>
+                  <View style={styles.descriptionStats}>
+                    <TouchableOpacity
+                      style={styles.descriptionItem}
+                      onPress={() => {
+                        navigation.navigate("Comments", {
+                          data: item,
+                        });
+                      }}
+                    >
+                      <EvilIcons name="comment" size={24} color="#BDBDBD" />
+                      <Text style={{ color: "#212121", marginLeft: 5 }}>
+                        {item.commentsNumber}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => addLike(item.id)}
+                      style={{ ...styles.descriptionItem, marginLeft: 25 }}
+                    >
+                      <AntDesign name="like2" size={18} color="#BDBDBD" />
+                      <Text style={{ color: "#212121", marginLeft: 5 }}>0</Text>
+                    </TouchableOpacity>
+                  </View>
                   <TouchableOpacity
                     style={styles.descriptionItem}
                     onPress={() => {
