@@ -37,12 +37,12 @@ export const ProfileScreen = ({ navigation }) => {
 
   const { userId, nickName } = useSelector((state) => state.auth);
 
-  const getCurrentUser = () => {
-    const user = auth.currentUser;
-    console.log("userInfo", user);
-  };
+  // const getCurrentUser = () => {
+  //   const user = auth.currentUser;
+  //   console.log("userInfo", user);
+  // };
 
-  const getAllPosts = () => {
+  const getAllUserPosts = () => {
     const q = query(collection(db, "posts"), where("userId", "==", userId));
     console.log("q", q);
     onSnapshot(q, (snapshot) => {
@@ -53,8 +53,8 @@ export const ProfileScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getCurrentUser();
-    getAllPosts();
+    // getCurrentUser();
+    getAllUserPosts();
   }, []);
 
   const addLike = async (id) => {

@@ -61,7 +61,9 @@ export const DefaultScreen = ({ navigation }) => {
                       style={{ ...styles.descriptionItem, marginLeft: 25 }}
                     >
                       <AntDesign name="like2" size={18} color="#BDBDBD" />
-                      <Text style={{ color: "#212121", marginLeft: 5 }}>0</Text>
+                      <Text style={{ color: "#212121", marginLeft: 5 }}>
+                        {item.likesNumber}
+                      </Text>
                     </TouchableOpacity>
                   </View>
                   <TouchableOpacity

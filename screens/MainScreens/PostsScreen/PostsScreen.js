@@ -4,14 +4,13 @@ import { CommentsScreen } from "../../NestedScreens/CommentsScreen/CommentsScree
 import { MapScreen } from "../../NestedScreens/MapScreen/MapScreen";
 import { TouchableOpacity, View } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { authSignOutUser } from "../../../redux/auth/authOperations";
 
 const NestedScreen = createStackNavigator();
 
-export const PostsScreen = () => {
+export const PostsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const logOut = () => {
@@ -26,7 +25,7 @@ export const PostsScreen = () => {
       }}
     >
       <NestedScreen.Screen
-        name="Posts"
+        name="Default"
         component={DefaultScreen}
         options={() => ({
           headerLeft: () => null,
@@ -53,10 +52,37 @@ export const PostsScreen = () => {
         name="Comments"
         component={CommentsScreen}
         options={() => ({
+          headerLeft: ({}) => (
+            <View>
+              <MaterialIcons
+                onPress={() => navigation.goBack()}
+                name="keyboard-backspace"
+                size={24}
+                color="#000"
+                style={{ marginLeft: 20 }}
+              />
+            </View>
+          ),
           tabBarStyle: { display: "none" },
         })}
       />
-      <NestedScreen.Screen name="Map" component={MapScreen} />
+      <NestedScreen.Screen
+        name="Map"
+        component={MapScreen}
+        options={() => ({
+          headerLeft: ({}) => (
+            <View>
+              <MaterialIcons
+                onPress={() => navigation.goBack()}
+                name="keyboard-backspace"
+                size={24}
+                color="#000"
+                style={{ marginLeft: 20 }}
+              />
+            </View>
+          ),
+        })}
+      />
     </NestedScreen.Navigator>
   );
 };
