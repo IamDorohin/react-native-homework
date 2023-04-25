@@ -17,6 +17,8 @@ import {
   updateDoc,
   increment,
   doc,
+  query,
+  where,
 } from "firebase/firestore";
 import { app } from "../../../firebase/config";
 import styles from "./ProfileScreen.styled";
@@ -30,7 +32,6 @@ const background = require("../../../assets/img.png");
 
 export const ProfileScreen = ({ navigation }) => {
   const [postsArray, setPostsArray] = useState([]);
-  // const [currentUserLike, setCurrentUserLike] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -42,19 +43,13 @@ export const ProfileScreen = ({ navigation }) => {
   };
 
   const getAllPosts = () => {
-    onSnapshot(collection(db, "posts"), (snapshot) => {
+    const q = query(collection(db, "posts"), where("userId", "==", userId));
+    console.log("q", q);
+    onSnapshot(q, (snapshot) => {
       setPostsArray(
         snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       );
     });
-
-    // onSnapshot(collection(db, "posts", id, "likes"), (snapshot) => {
-    //   snapshot.docs.find((doc) => {
-    //     if ((doc.data().userId = userId)) {
-    //       setCurrentUserLike(true);
-    //     }
-    //   });
-    // });
   };
 
   useEffect(() => {
@@ -84,6 +79,7 @@ export const ProfileScreen = ({ navigation }) => {
     dispatch(authSignOutUser());
   };
 
+  console.log("postsArray", postsArray);
   return (
     <View style={styles.screenContainer}>
       <ImageBackground source={background} style={styles.background}>
