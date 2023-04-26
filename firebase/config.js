@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+// import { initializeApp } from "firebase-admin/app";
 import { getStorage } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
 

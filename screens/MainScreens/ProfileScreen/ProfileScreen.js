@@ -74,6 +74,7 @@ export const ProfileScreen = ({ navigation }) => {
             initPostsArray={initPostsArray}
             userId={userId}
             navigation={navigation}
+            isProfileScreen={true}
           />
         </View>
       </ImageBackground>

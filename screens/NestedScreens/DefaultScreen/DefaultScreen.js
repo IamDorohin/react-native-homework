@@ -12,9 +12,7 @@ export const DefaultScreen = ({ navigation }) => {
   const [initPostsArray, setInitPostsArray] = useState([]);
   const [updatedPostsArray, setUpdatedPostsArray] = useState([]);
 
-  const { userId, nickName, userPhoto, userEmail } = useSelector(
-    (state) => state.auth
-  );
+  const { userId } = useSelector((state) => state.auth);
   const getAllPosts = () => {
     onSnapshot(collection(db, "posts"), (snapshot) => {
       setInitPostsArray(
@@ -31,6 +29,8 @@ export const DefaultScreen = ({ navigation }) => {
     setUpdatedPostsArray(likedPostsHandler(initPostsArray, userId));
   }, [initPostsArray]);
 
+  console.log("updatedPostsArray", updatedPostsArray);
+
   return (
     <View style={styles.postsContainer}>
       {updatedPostsArray && (
@@ -38,10 +38,8 @@ export const DefaultScreen = ({ navigation }) => {
           updatedPostsArray={updatedPostsArray}
           initPostsArray={initPostsArray}
           userId={userId}
-          nickName={nickName}
-          userPhoto={userPhoto}
-          userEmail={userEmail}
           navigation={navigation}
+          isProfileScreen={false}
         />
       )}
       <View>

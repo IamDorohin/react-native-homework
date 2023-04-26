@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
   commentsContainer: {
     paddingTop: 32,
     marginHorizontal: 16,
+    height: 290,
   },
   currentUserComment: {
     flexDirection: "row-reverse",
@@ -41,9 +42,8 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   currentUserText: {
-    marginBottom: 6,
+    marginBottom: 10,
   },
-  currentUserCommentDate: {},
   otherUserComment: {
     textAlign: "right",
     flexDirection: "row",
@@ -65,14 +65,18 @@ const styles = StyleSheet.create({
     width: 40,
     borderRadius: 50,
   },
+  currentUserCommentDate: {
+    fontSize: 11,
+  },
   inputContainer: {
     position: "absolute",
-    bottom: 16,
+    bottom: 10,
     alignSelf: "center",
-    width: "100%",
+    marginHorizontal: 16,
+    width: "90%",
   },
   input: {
-    width: "100%",
+    // width: "100%",
     height: 50,
     paddingLeft: 16,
     borderWidth: 1,

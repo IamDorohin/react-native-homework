@@ -45,7 +45,9 @@ export const CreatePostScreen = ({ navigation }) => {
   const [isLoadingPhoto, setIsLoadingPhoto] = useState(false);
   const [takenPhoto, setTakenPhoto] = useState(null);
 
-  const { userId, nickName, userPhoto } = useSelector((state) => state.auth);
+  const { userId, nickName, userPhoto, userEmail } = useSelector(
+    (state) => state.auth
+  );
 
   useEffect(() => {
     (async () => {
@@ -106,6 +108,7 @@ export const CreatePostScreen = ({ navigation }) => {
         userId,
         nickName,
         userPhoto,
+        userEmail,
         commentsNumber: 0,
         likesNumber: 0,
         likes: [],

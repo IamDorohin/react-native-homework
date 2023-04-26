@@ -8,29 +8,23 @@ export const PostsList = ({
   updatedPostsArray,
   initPostsArray,
   userId,
-  nickName,
-  userPhoto,
-  userEmail,
+  isProfileScreen,
 }) => {
-  console.log(
-    "userPhoto & nickName & userEmail ",
-    userPhoto,
-    nickName,
-    userEmail
-  );
-  const showUserInfo = userPhoto || nickName || userEmail;
   return (
     <FlatList
       data={updatedPostsArray}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
         <View title={item.title} style={styles.post}>
-          {showUserInfo ? (
+          {!isProfileScreen ? (
             <View style={styles.userInfo}>
-              <Image style={styles.userPhoto} source={{ uri: userPhoto }} />
+              <Image
+                style={styles.userPhoto}
+                source={{ uri: item.userPhoto }}
+              />
               <View style={styles.userInfoDescr}>
-                <Text style={styles.nickName}>{nickName}</Text>
-                <Text style={styles.userEmail}>{userEmail}</Text>
+                <Text style={styles.nickName}>{item.nickName}</Text>
+                <Text style={styles.userEmail}>{item.userEmail}</Text>
               </View>
             </View>
           ) : null}
