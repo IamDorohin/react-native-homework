@@ -72,6 +72,7 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
         nickName: user.displayName,
         userId: user.uid,
         userPhoto: user.photoURL,
+        userEmail: user.email,
       };
       dispatch(AuthSlice.actions.authStateChange({ stateChange: true }));
       dispatch(AuthSlice.actions.updateUserProfile(currentUserData));

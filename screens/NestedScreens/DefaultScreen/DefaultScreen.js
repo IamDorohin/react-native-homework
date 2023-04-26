@@ -1,20 +1,23 @@
-import { EvilIcons, AntDesign, Feather } from "@expo/vector-icons";
-
+import { Feather } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
-import { View, FlatList, Image, Text, TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase/config";
-
+import { likedPostsHandler } from "../../../helpers/likedPostsHandler";
+import { View } from "react-native";
 import styles from "./DefaultScreen.styled";
-
-const userPhoto = require("../../../assets/photo.png");
+import { PostsList } from "../../../components/PostsList/PostsList";
 
 export const DefaultScreen = ({ navigation }) => {
-  const [postsArray, setPostsArray] = useState([]);
+  const [initPostsArray, setInitPostsArray] = useState([]);
+  const [updatedPostsArray, setUpdatedPostsArray] = useState([]);
 
+  const { userId, nickName, userPhoto, userEmail } = useSelector(
+    (state) => state.auth
+  );
   const getAllPosts = () => {
     onSnapshot(collection(db, "posts"), (snapshot) => {
-      setPostsArray(
+      setInitPostsArray(
         snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       );
     });
@@ -24,64 +27,22 @@ export const DefaultScreen = ({ navigation }) => {
     getAllPosts();
   }, []);
 
-  console.log("postsArray", postsArray);
+  useEffect(() => {
+    setUpdatedPostsArray(likedPostsHandler(initPostsArray, userId));
+  }, [initPostsArray]);
+
   return (
     <View style={styles.postsContainer}>
-      {postsArray && (
-        <>
-          <FlatList
-            data={postsArray}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View title={item.title} style={styles.post}>
-                <View>
-                  <Image source={{ uri: item.userPhoto }} />
-                  <Text>{userPhoto.nickName}</Text>
-                  <Text>{}</Text>
-                </View>
-                <Image source={{ uri: item.photo }} style={styles.photo} />
-                <Text style={styles.postTitle}>{item.title}</Text>
-                <View style={styles.descriptionContainer}>
-                  <View style={styles.descriptionStats}>
-                    <TouchableOpacity
-                      style={styles.descriptionItem}
-                      onPress={() => {
-                        navigation.navigate("Comments", {
-                          data: item,
-                        });
-                      }}
-                    >
-                      <EvilIcons name="comment" size={24} color="#BDBDBD" />
-                      <Text style={{ color: "#212121", marginLeft: 5 }}>
-                        {item.commentsNumber}
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => addLike(item.id)}
-                      style={{ ...styles.descriptionItem, marginLeft: 25 }}
-                    >
-                      <AntDesign name="like2" size={18} color="#BDBDBD" />
-                      <Text style={{ color: "#212121", marginLeft: 5 }}>
-                        {item.likesNumber}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <TouchableOpacity
-                    style={styles.descriptionItem}
-                    onPress={() => {
-                      navigation.navigate("Map", { data: item.coords });
-                    }}
-                  >
-                    <EvilIcons name="location" size={24} color="#BDBDBD" />
-                    <Text style={styles.descriptionItemText}>
-                      {item.location}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
-          />
-        </>
+      {updatedPostsArray && (
+        <PostsList
+          updatedPostsArray={updatedPostsArray}
+          initPostsArray={initPostsArray}
+          userId={userId}
+          nickName={nickName}
+          userPhoto={userPhoto}
+          userEmail={userEmail}
+          navigation={navigation}
+        />
       )}
       <View>
         <Feather

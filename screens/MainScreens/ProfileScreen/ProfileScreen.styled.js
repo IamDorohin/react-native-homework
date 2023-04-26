@@ -58,7 +58,8 @@ const styles = StyleSheet.create({
   },
   postTitle: {
     marginTop: 10,
-    fontFamily: "roboto-Regular",
+    fontWeight: "bold",
+    fontFamily: "roboto-Bold",
     fontStyle: "normal",
     fontSize: 16,
     lineHeight: 19,

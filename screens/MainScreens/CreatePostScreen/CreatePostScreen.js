@@ -108,6 +108,8 @@ export const CreatePostScreen = ({ navigation }) => {
         userPhoto,
         commentsNumber: 0,
         likesNumber: 0,
+        likes: [],
+        isLiked: false,
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -128,7 +130,7 @@ export const CreatePostScreen = ({ navigation }) => {
 
   const submitHandler = async () => {
     createPost();
-    navigation.navigate("Posts");
+    navigation.navigate("Default");
     setInputValue(initialState);
   };
 

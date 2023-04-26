@@ -9,6 +9,7 @@ export default function App() {
   const [fontsLoaded] = useFonts({
     "roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
     "roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
+    "roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
   });
 
   if (!fontsLoaded) {
