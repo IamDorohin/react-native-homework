@@ -1,6 +1,6 @@
-export const likedPostsHandler = (initPostsArray, userId) => {
+export const likedPostsHandler = (initPostsArray, uid) => {
   const newPostsArray = initPostsArray?.map((post) => {
-    if (post.likes.includes(userId)) {
+    if (post.likes.includes(uid)) {
       return { ...post, isLiked: true };
     } else return post;
   });

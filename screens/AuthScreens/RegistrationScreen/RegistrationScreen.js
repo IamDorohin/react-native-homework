@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
 import { authSignUp } from "../../../redux/auth/authOperations";
 import {
   View,
@@ -15,6 +14,8 @@ import {
   Platform,
 } from "react-native";
 import styles from "./RegistrationScreen.styled";
+import { handleImagePicker } from "../../../helpers/imagePicker";
+import { AvatarPicker } from "../../../components/AvatarPicker/AvatarPicker";
 
 const background = require("../../../assets/img.png");
 
@@ -33,20 +34,10 @@ export const RegistrationScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  const getUserPhoto = async () => {
+    const result = await handleImagePicker();
 
-    if (!result.canceled) {
-      setInputValue((prevState) => ({
-        ...prevState,
-        avatar: result.assets[0].uri,
-      }));
-    }
+    setInputValue((prevState) => ({ ...prevState, avatar: result }));
   };
 
   const inputValueHandler = (input, value) => {
@@ -72,8 +63,9 @@ export const RegistrationScreen = ({ navigation }) => {
     console.log(inputValue);
     dispatch(authSignUp(inputValue));
     setInputValue(initialState);
-    // navigation.navigate("Home");
   };
+
+  console.log("inputValue", inputValue);
 
   return (
     <TouchableWithoutFeedback onPress={showKeyboardHandler}>
@@ -88,26 +80,10 @@ export const RegistrationScreen = ({ navigation }) => {
               marginBottom: isShowKeyboard ? -180 : 0,
             }}
           >
-            <View style={styles.avatarContainer}>
-              <TouchableOpacity
-                activeOpacity={0.9}
-                style={styles.avatarPicker}
-                onPress={pickImage}
-              >
-                {inputValue.avatar && (
-                  <Image
-                    style={styles.userAvatar}
-                    source={{ uri: inputValue.avatar }}
-                  />
-                )}
-              </TouchableOpacity>
-              <AntDesign
-                style={styles.avatarPickerIcon}
-                name="pluscircleo"
-                size={24}
-                color={"#FF6C00"}
-              />
-            </View>
+            <AvatarPicker
+              getUserPhoto={getUserPhoto}
+              avatar={inputValue.avatar}
+            />
             <Text style={styles.title} size={25}>
               Registration
             </Text>

@@ -5,8 +5,6 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  setPersistence,
-  browserLocalPersistence,
 } from "firebase/auth";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { AuthSlice } from "./authReducer";
@@ -16,13 +14,13 @@ const auth = getAuth(app);
 const storage = getStorage();
 
 const uploadedUserImage = async (login, avatar) => {
-  const storageRef = ref(storage, `usersAvatars/${login}.jpg`);
+  const storageRef = ref(storage, `usersAvatars/${login}${Date.now()}.jpg`);
   const response = await fetch(avatar);
   const uploadedFile = await response.blob();
   await uploadBytes(storageRef, uploadedFile);
 
   const photoUrl = await getDownloadURL(
-    ref(storage, `usersAvatars/${login}.jpg`)
+    ref(storage, `usersAvatars/${login}${Date.now()}.jpg`)
   );
   return photoUrl;
 };
@@ -54,17 +52,6 @@ export const authSignUp =
       console.log(error);
     }
   };
-
-// export const authSignIn =
-//   ({ email, password }) =>
-//   async (dispatch, getState) => {
-//     try {
-//       await signInWithEmailAndPassword(auth, email, password);
-//       await setPersistence(auth, browserLocalPersistence);
-//     } catch (error) {
-//       console.log("error.message", error.message);
-//     }
-//   };
 
 export const authSignIn =
   ({ email, password }) =>

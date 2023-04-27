@@ -1,16 +1,23 @@
-import { getAuth, updateProfile } from "firebase/auth";
-import { app } from "../firebase/config";
+import { updateProfile } from "firebase/auth";
 import { auth } from "../firebase/config";
 
-// const auth = getAuth(app);
+export const deleteUserPhoto = async () => {
+  try {
+    await updateProfile(auth.currentUser, {
+      photoURL: "",
+    });
+    console.log("its ok");
+  } catch (error) {
+    console.log("error.message", error.message);
+  }
+};
 
-export const DeleteUserPhoto = () => {
-  updateProfile(auth.currentUser, {
-    photoURL: null,
-    displayName: "User",
+export const addUserPhoto = async (photoForDownload) => {
+  await updateProfile(auth.currentUser, {
+    photoURL: photoForDownload,
   })
     .then(() => {
-      console.log("Profile updated!");
+      console.log("Added new photo!");
     })
     .catch((error) => {
       console.log("error", error);
