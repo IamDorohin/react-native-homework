@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { likedPostsHandler } from "../../../helpers/likedPostsHandler";
 import { PostsList } from "../../../components/PostsList/PostsList";
 import { DeleteUserPhoto } from "../../../helpers/DeleteUserPhoto";
-
+import { auth } from "../../../firebase/config";
 const background = require("../../../assets/img.png");
 
 export const ProfileScreen = ({ navigation }) => {
@@ -25,6 +25,8 @@ export const ProfileScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const { userId, nickName, userPhoto } = useSelector((state) => state.auth);
+
+  const { displayName } = auth.currentUser;
 
   const getAllUserPosts = async () => {
     const q = query(collection(db, "posts"), where("userId", "==", userId));
@@ -68,7 +70,7 @@ export const ProfileScreen = ({ navigation }) => {
               onPress={() => logOut()}
             />
           </TouchableOpacity>
-          <Text style={styles.profileNickName}>{nickName}</Text>
+          <Text style={styles.profileNickName}>{displayName}</Text>
           <PostsList
             updatedPostsArray={updatedPostsArray}
             initPostsArray={initPostsArray}
