@@ -5,6 +5,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  setPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { AuthSlice } from "./authReducer";
@@ -52,6 +54,17 @@ export const authSignUp =
       console.log(error);
     }
   };
+
+// export const authSignIn =
+//   ({ email, password }) =>
+//   async (dispatch, getState) => {
+//     try {
+//       await signInWithEmailAndPassword(auth, email, password);
+//       await setPersistence(auth, browserLocalPersistence);
+//     } catch (error) {
+//       console.log("error.message", error.message);
+//     }
+//   };
 
 export const authSignIn =
   ({ email, password }) =>

@@ -14,7 +14,7 @@ import { authSignOutUser } from "../../../redux/auth/authOperations";
 import { useDispatch, useSelector } from "react-redux";
 import { likedPostsHandler } from "../../../helpers/likedPostsHandler";
 import { PostsList } from "../../../components/PostsList/PostsList";
-// import { DeleteUserPhoto } from "../../../helpers/DeleteUserPhoto";
+import { DeleteUserPhoto } from "../../../helpers/DeleteUserPhoto";
 
 const background = require("../../../assets/img.png");
 
@@ -55,7 +55,7 @@ export const ProfileScreen = ({ navigation }) => {
             <Image style={styles.profilePhoto} source={{ uri: userPhoto }} />
             <TouchableOpacity
               style={styles.profilePhotoBtn}
-              // onPress={DeleteUserPhoto(userId)}
+              onPress={DeleteUserPhoto}
             >
               <AntDesign name="closecircleo" size={24} color="#BDBDBD" />
             </TouchableOpacity>
